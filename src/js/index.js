@@ -16,12 +16,38 @@ import Home from "./component/home.jsx";
 
 
 
- let counter = 0;
- setInterval(function(){
-   
-    
-    ReactDOM.createRoot(document.getElementById('app')).render(<Home counter={counter} />);
-     //render your react application
-    counter++;}, 1000); 
+let counter = 0;
+let intervalId = null;
+const root = ReactDOM.createRoot(document.getElementById('app'));
 
-  
+function renderApp() {
+   root.render(<Home counter={counter} startCounter={startCounter} stopCounter={stopCounter} resetTimer={resetTimer} />);
+
+}
+
+function startCounter() {
+   if (!intervalId) {
+      intervalId = setInterval(function () {
+         counter++;
+         renderApp()
+         //render your react application
+      }, 1000);
+   }
+}
+
+
+const stopCounter = () => {
+   if (intervalId) {
+      clearInterval(intervalId)
+      intervalId = null
+   }
+}
+const resetTimer = () => {
+   stopCounter()
+   counter = 0
+   renderApp()
+   //startCounter()
+
+}
+renderApp()
+startCounter();
